@@ -4,49 +4,70 @@ var itemShow = document.querySelector("#itemperpage");
 var tr = tbody.querySelectorAll("tr");
 var emptyBox = [];
 var index = 1;
-var itemParPage = 8; 
+var itemParPage = 8;
 
-for (let i = 0; i < tr.length; i++){
-    emptyBox.push(tr[i]);
+for (let i = 0; i < tr.length; i++) {
+  emptyBox.push(tr[i]);
 }
 
 itemShow.onchange = giveTrPerPage;
 
-function giveTrPerPage(){
-    itemParPage = Number(this.value);   
-    displayPage(itemParPage);
-    pageGenerator(itemParPage);
+function giveTrPerPage() {
+  itemParPage = Number(this.value);
+  displayPage(itemParPage);
+  pageGenerator(itemParPage);
 }
 
-function displayPage(limit){
-    tbody.innerHTML = '';
-    for(let i = 0; i < limit; i++){
-        tbody.appendChild(emptyBox[i]);
-    }
-    const pageNum = pageUI.querySelectorAll(".list");
-    pageNum.forEach(n => n.remove());
+function displayPage(limit) {
+  tbody.innerHTML = "";
+  for (let i = 0; i < limit; i++) {
+    tbody.appendChild(emptyBox[i]);
+  }
+  const pageNum = pageUI.querySelectorAll(".list");
+  pageNum.forEach((n) => n.remove());
 }
 
 displayPage(itemParPage);
 
-function pageGenerator(getem){
-    const num_of_tr = emptyBox.length;
-    if(num_of_tr <= getem){
-        pageUI.style.display = "none";
+function pageGenerator(getem) {
+  const num_of_tr = emptyBox.length;
+  if (num_of_tr <= getem) {
+    pageUI.style.display = "none";
+  } else {
+    pageUI.style.display = "flex";
+    const num_of_page = Math.ceil(num_of_tr / getem);
+    for (let i = 1; i <= num_of_page; i++) {
+      const li = document.createElement("li");
+      li.className = "list";
+      const a = document.createElement("a");
+      a.href = "#";
+      a.innerText = i;
+      a.setAttribute("data-page", i);
+      li.appendChild(a);
+      pageUI.insertBefore(li, pageUI.querySelector(".next"));
     }
-    else{
-        pageUI.style.display = "flex";
-        const num_of_page = Math.ceil(num_of_tr/getem);
-        for(let i = 1; i <= num_of_page; i++){
-            const li = document.createElement('li');
-            li.className = 'list';
-            const a = document.createElement('a'); 
-            a.href = "#";   
-            a.innerText = i;
-            a.setAttribute('data-page', i);
-            li.appendChild(a);
-            pageUI.insertBefore(li, pageUI.querySelector(".next"));
-        }
-    }
+  }
 }
 pageGenerator(itemParPage);
+
+let pageLink = pageUI.querySelectorAll("a");
+let lastPage = pageLink.length - 2;
+
+function pageRunner(page, items, lastPage, active) {
+  for (button of page) {
+    button.onclick = (e) => {
+        const page_num = e.target.getAttribute("data-page");
+        const page_mover = e.target.getAttribute("id");
+        if(page_num != null){
+            index = page_num;
+        }else{
+            if(page_mover === "next"){
+                index++;
+                if(index > lastPage){
+
+                }
+            }
+        }
+    };
+  }
+}
